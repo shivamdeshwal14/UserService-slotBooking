@@ -31,7 +31,23 @@ public class AdminController {
 	    			.map(UserResponse::new)
 	    			.toList();
 	    }
+	    
+	    @GetMapping("/user/{id}")
+	    public UserResponse getUserById(@PathVariable long id) {
+//	    	System.out.println("User id"+id);
+	    	User user=userService.getUserByIdService(id);
+	    	return new UserResponse(user);
+	    }
+	    
+	    @DeleteMapping("/deleteuser/{id}")
+	    public String deleteUserAccount(@PathVariable long id) {
+	    		User user=userService.deleteUserByAccountService(id);
+	    		String str="user with id-"+id+" and email-"+user.getEmail()+" deleted successfully";
+	    		return str;
+	    		}
+	    
 	   	}
+
 	
 
 

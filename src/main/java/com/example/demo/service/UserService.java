@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.OnboardingRequest;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserAlreadyExistsException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.model.User.Role;
 import com.example.demo.repository.UserRepository;
@@ -77,5 +78,19 @@ public class UserService {
         return userRepository.findAll();
     }
     
+    public User getUserByIdService(Long id) {
+    	User user=userRepository.findById(id).orElseThrow(()->new UserNotFoundException("user doestnot exists"));
+    	
+    	return user;
+    }
+    
+    public User deleteUserByAccountService(Long id) {
+    	User user=userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Doesnot exist"));
+    	
+    	userRepository.deleteById(id);
+    	return user;
+    	
+    }
+  
     
 }
