@@ -32,19 +32,28 @@ public class AdminController {
 	    			.toList();
 	    }
 	    
+//	    fetch user with the id
+	    
 	    @GetMapping("/user/{id}")
-	    public UserResponse getUserById(@PathVariable long id) {
-//	    	System.out.println("User id"+id);
+	    public UserResponse getUserById(@PathVariable long id) {;
 	    	User user=userService.getUserByIdService(id);
 	    	return new UserResponse(user);
 	    }
 	    
-	    @DeleteMapping("/deleteuser/{id}")
+//	    delete user with the id
+	    
+	    @DeleteMapping("delete/user/{id}")
 	    public String deleteUserAccount(@PathVariable long id) {
 	    		User user=userService.deleteUserByAccountService(id);
 	    		String str="user with id-"+id+" and email-"+user.getEmail()+" deleted successfully";
 	    		return str;
 	    		}
+	    
+	    @PatchMapping("/changeActiveStatus/user/{id}")
+	    public UserResponse deactivateUser(@PathVariable long id) {
+	    	User user=userService.changeActiveStatusService(id);	    			
+	    	return new UserResponse(user);
+	    }
 	    
 	   	}
 

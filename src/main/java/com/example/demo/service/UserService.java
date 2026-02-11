@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.OnboardingRequest;
+import com.example.demo.exception.AccountDisabledException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserAlreadyExistsException;
 import com.example.demo.exception.UserNotFoundException;
@@ -33,8 +34,9 @@ public class UserService {
     	
     	User user= userRepository.findByEmail(email.trim()).orElseThrow(InvalidCredentialsException::new);
     	
-    	
     	if(!passwordEncoder.matches(password,user.getPassword())) throw new InvalidCredentialsException();
+    	if(!user.isActive()) throw new AccountDisabledException();
+ 
         return user;
     }
     
@@ -90,6 +92,15 @@ public class UserService {
     	userRepository.deleteById(id);
     	return user;
     	
+    }
+    
+    public User changeActiveStatusService(long id) {
+    	User user=userRepository.findById(id)
+    			.orElseThrow(()->new UserNotFoundException("User does Not exists"));
+    	boolean isActive=user.isActive();
+    	System.out.println("isActive"+isActive);
+    	user.setActive(!isActive);
+    	return userRepository.save(user);
     }
   
     

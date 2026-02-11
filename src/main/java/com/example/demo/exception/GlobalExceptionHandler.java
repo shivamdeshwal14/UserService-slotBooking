@@ -39,5 +39,14 @@ public class GlobalExceptionHandler {
 	    		
 	    	
 	    }
+	    
+	    @ExceptionHandler(AccountDisabledException.class)
+	    public ResponseEntity<ApiError> handleAccountDisabled(AccountDisabledException ex) {
+	    	ApiError error=new ApiError(HttpStatus.FORBIDDEN.value(),
+	    			ex.getMessage());
+	    	return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+	    }
+	    
+	    
 	}
 

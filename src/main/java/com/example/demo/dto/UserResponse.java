@@ -10,13 +10,14 @@ public class UserResponse {
 	private String email;
 	private Role role;
 	private String phone;
+	private boolean active;
 	
 	public UserResponse(User user) {
 		this.id=user.getId();
 		this.name=user.getName();
 		this.email=user.getEmail();
 		this.role=user.getRole();
-		
+		this.active=user.isActive();
 		this.phone=user.getPhone();
 		
 		
@@ -26,5 +27,6 @@ public class UserResponse {
 	public Role getRole() {return role;}
 	public String getEmail() {return email;}
 	public String getPhone() {return phone;}
+	public boolean getActive() {return active;}
 }
 
