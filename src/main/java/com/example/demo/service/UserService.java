@@ -8,7 +8,6 @@ import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.model.User.Role;
 import com.example.demo.repository.UserRepository;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +18,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    
-
-    public UserService(UserRepository userRepository,PasswordEncoder paswordEncoder){
+       public UserService(UserRepository userRepository,PasswordEncoder paswordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder=paswordEncoder;
      
@@ -61,15 +58,14 @@ public class UserService {
     	userRepository.findByEmail(onb.getEmail()).ifPresent(u->{
     		throw new UserAlreadyExistsException("user already exists with this email,please login!");
     	});
-    	
-    	User user=new User();
+    
+         User user=new User();
     	 user.setName(onb.getName());
          user.setEmail(onb.getEmail().trim());
          user.setPhone(onb.getPhone());
          user.setPassword(passwordEncoder.encode(onb.getPassword()));
          user.setRole(onb.getRole());
          user.setActive(true);
-         
          return userRepository.save(user);
     }
 
@@ -79,7 +75,7 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    
+   
     public User getUserByIdService(Long id) {
     	User user=userRepository.findById(id).orElseThrow(()->new UserNotFoundException("user doestnot exists"));
     	
