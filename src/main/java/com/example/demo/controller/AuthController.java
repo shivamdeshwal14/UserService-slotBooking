@@ -27,7 +27,9 @@ public class AuthController {
 	        String email=credentials.getEmail();
 	        String password=credentials.getPassword();
 	        User user=userService.login(email, password);	      
-	        String token=jwt.generateToken(user.getId(),user.getRole());	      
+	        String token=jwt.generateToken( user.getId(), 
+	        	    user.getRole(), 
+	        	    user.getOrganization() != null ? user.getOrganization().getId() : null);	      
 	        return new LoginResponse(token,new UserResponse(user));
 	    }
 	    

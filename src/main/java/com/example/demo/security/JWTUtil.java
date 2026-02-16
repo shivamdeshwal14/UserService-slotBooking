@@ -18,9 +18,11 @@ public class JWTUtil {
 		this.key=Keys.hmacShaKeyFor(config.getSecret().getBytes());
 		this.expiration=config.getExpiration();
 	}
-	public String generateToken(Long userId,Role role) {
+	public String generateToken(Long userId,Role role,Long organizationId) {
 		return Jwts.builder().
-				setSubject(userId.toString()).claim("role", role)
+				setSubject(userId.toString()).
+				claim("role", role.name())
+				.claim("orgId", organizationId)
 				.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis()+expiration))
 				.signWith(key)
 				.compact();

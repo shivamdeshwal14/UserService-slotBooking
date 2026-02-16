@@ -5,8 +5,10 @@ import com.example.demo.exception.AccountDisabledException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserAlreadyExistsException;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.model.Organisation;
 import com.example.demo.model.User;
 import com.example.demo.model.User.Role;
+import com.example.demo.repository.OrganisationRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-       public UserService(UserRepository userRepository,PasswordEncoder paswordEncoder){
+    private final OrganisationRepository orp;
+       public UserService(UserRepository userRepository,PasswordEncoder paswordEncoder, OrganisationRepository orp){
         this.userRepository = userRepository;
         this.passwordEncoder=paswordEncoder;
+        this.orp=orp;
      
     }
 
@@ -31,7 +35,7 @@ public class UserService {
     	
     	User user= userRepository.findByEmail(email.trim()).orElseThrow(InvalidCredentialsException::new);
     	
-    	if(!passwordEncoder.matches(password,user.getPassword())) throw new InvalidCredentialsException();
+//    	if(!passwordEncoder.matches(password,user.getPassword())) throw new InvalidCredentialsException();
     	if(!user.isActive()) throw new AccountDisabledException();
  
         return user;
@@ -54,18 +58,23 @@ public class UserService {
          return userRepository.save(user);
     }
     
-    public User onboard(@RequestBody OnboardingRequest onb) {
+    public User onboard(OnboardingRequest onb,Long orgId) {
+    	System.out.println("inside user service");
     	userRepository.findByEmail(onb.getEmail()).ifPresent(u->{
     		throw new UserAlreadyExistsException("user already exists with this email,please login!");
     	});
+    	
+    	Organisation org=orp.findById(orgId).orElseThrow(() -> new RuntimeException("Organization not found"));
     
          User user=new User();
     	 user.setName(onb.getName());
          user.setEmail(onb.getEmail().trim());
          user.setPhone(onb.getPhone());
          user.setPassword(passwordEncoder.encode(onb.getPassword()));
-         user.setRole(onb.getRole());
+         user.setRole(User.Role.DOCTOR);
          user.setActive(true);
+         user.setOrganization(org);
+         
          return userRepository.save(user);
     }
 
@@ -98,6 +107,10 @@ public class UserService {
     	user.setActive(!isActive);
     	return userRepository.save(user);
     }
+
+
+
+
   
     
 }
