@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.OrganisationResponse;
-import com.example.demo.dto.UserResponse;
-import com.example.demo.model.Organisation;
+
 import com.example.demo.service.UserService;
 
 @RestController
@@ -19,7 +18,7 @@ public class UserController {
 			this.use=use;	
 	}
 	
-
+	
 @GetMapping("/all/orgnizations")
 	public List<OrganisationResponse> getAllOrganizations(){
     	return use.getAllOrganizations()

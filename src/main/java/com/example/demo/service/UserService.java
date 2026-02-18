@@ -1,5 +1,6 @@
 package com.example.demo.service;
 import com.example.demo.dto.OnboardingRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.exception.AccountDisabledException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserAlreadyExistsException;
@@ -69,7 +70,8 @@ public class UserService {
          user.setEmail(onb.getEmail().trim());
          user.setPhone(onb.getPhone());
          user.setPassword(passwordEncoder.encode(onb.getPassword()));
-         user.setRole(User.Role.DOCTOR);
+     
+         user.setRole(onb.getRole()==null ?User.Role.DOCTOR :onb.getRole());
          user.setActive(true);
          user.setOrganization(org);
          
@@ -97,13 +99,25 @@ public class UserService {
     	
     }
     
-    public User changeActiveStatusService(long id) {
-    	User user=userRepository.findById(id)
-    			.orElseThrow(()->new UserNotFoundException("User does Not exists"));
+    public User changeActiveStatusService(long id,Long orgId) {
+    	User user=userRepository.findByIdAndOrganization_Id(id,orgId).orElseThrow(()->new RuntimeException("User not found with this id"));
+    	
+    			    	
     	boolean isActive=user.isActive();
-    	System.out.println("isActive"+isActive);
+       	
     	user.setActive(!isActive);
     	return userRepository.save(user);
+    }
+    
+//    fetch yur organization employess
+    
+    public List<UserResponse> getAllEmpService(Long orgId){
+    	List<User> userdata=userRepository.findAllByOrganization_Id(orgId);
+    	return userdata.
+    			stream().
+    			map(UserResponse::new).toList();
+    	
+    	
     }
     
     

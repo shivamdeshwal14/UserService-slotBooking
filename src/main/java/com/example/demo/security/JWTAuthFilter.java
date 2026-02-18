@@ -45,6 +45,7 @@ public JWTAuthFilter(JWTUtil jwt) {
 		Claims claims=jwt.validateToken(token);
 		String roleStr=claims.get("role",String.class);
 		System.out.println("role in token--- "+roleStr);
+		
 		Role role = Role.valueOf(roleStr);
 		if(Role.ADMIN!=role) {
 			System.out.println("if condition ");

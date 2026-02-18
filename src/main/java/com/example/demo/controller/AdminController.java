@@ -26,56 +26,60 @@ public class AdminController {
 	    @PostMapping("/onboard")
 	    public UserResponse OnboardEmp(@RequestBody OnboardingRequest onb,HttpServletRequest request) {
 	    	 try {
-	    	        System.out.println("inside /onboard");
-	    	        
+	    	    	    	        
 	    	        String authHeader = request.getHeader("Authorization");
 	    	        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
 	    	            throw new RuntimeException("Missing or invalid Authorization header");
 	    	        }
+	    	        
 	    	        String token = authHeader.substring(7); // remove "Bearer "
 	    	        Claims claims = jwt.validateToken(token);
 	    	        System.out.println("Claims: " + claims);
-
 	    	        Number orgIdNum = (Number) claims.get("orgId");
 	    	        Long orgId = orgIdNum.longValue();
 	    	        System.out.println("orgId from token: " + orgId);
-
 	    	        User user = userService.onboard(onb, orgId);
 	    	        return new UserResponse(user);
+	    	        
 	    	    } catch (Exception e) {
 	    	        e.printStackTrace();  
 	    	        throw e;
 	    	    }
 	   
 	    }
-	    @GetMapping("/allusers")
-	    public List<UserResponse> getAllUsers(){
-	    	return userService.getAllUsers()
-	    			.stream()
-	    			.map(UserResponse::new)
-	    			.toList();
+	    
+	    
+//	    get all employees of the organization admin and doctors both;
+	    @GetMapping("/org/showEmps/")
+	    public List<UserResponse> getAllUsers(HttpServletRequest request){
+	    		System.out.println(" api hit successfully");
+	    		String authHeader=request.getHeader("Authorization");
+	    		if(authHeader==null || !authHeader.startsWith("Bearer ")) throw new RuntimeException("Invalid or missing token");
+	    	
+	    		String token=authHeader.substring(7);
+	    		Claims claims=jwt.validateToken(token);
+	    		
+	    		Number orgIdNum = (Number) claims.get("orgId");
+    	        Long orgId = orgIdNum.longValue();
+    	        return userService.getAllEmpService(orgId);  		
 	    }
 	    
-//	    fetch user with the id
 	    
-	    @GetMapping("/user/{id}")
-	    public UserResponse getUserById(@PathVariable long id) {;
-	    	User user=userService.getUserByIdService(id);
-	    	return new UserResponse(user);
-	    }
 	    
-//	    delete user with the id
-	    
-	    @DeleteMapping("delete/user/{id}")
-	    public String deleteUserAccount(@PathVariable long id) {
-	    		User user=userService.deleteUserByAccountService(id);
-	    		String str="user with id-"+id+" and email-"+user.getEmail()+" deleted successfully";
-	    		return str;
-	    		}
+//	    make user account disable but it should be of their organization only not anyone else
+
 	    
 	    @PatchMapping("/changeActiveStatus/user/{id}")
-	    public UserResponse deactivateUser(@PathVariable long id) {
-	    	User user=userService.changeActiveStatusService(id);	    			
+	    public UserResponse deactivateUser(@PathVariable long id,HttpServletRequest request) {
+	    	String authHeader=request.getHeader("Authorization");
+    		if(authHeader==null || !authHeader.startsWith("Bearer ")) throw new RuntimeException("Invalid or missing token");
+    		String token=authHeader.substring(7);
+    		Claims claims=jwt.validateToken(token);
+    		
+    		Number orgIdNum = (Number) claims.get("orgId");
+	        Long orgId = orgIdNum.longValue();
+	    	User user=userService.changeActiveStatusService(id,orgId);	   
+	    	
 	    	return new UserResponse(user);
 	    }
 	    
