@@ -3,6 +3,9 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(
     name = "users",
@@ -24,6 +27,7 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +39,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name="organization_id")
+    @JsonBackReference
     private Organisation organization; 
 
     public enum Role { ADMIN, DOCTOR, USER }

@@ -75,7 +75,7 @@ public JWTAuthFilter(JWTUtil jwt) {
 @Override
 protected boolean shouldNotFilter(HttpServletRequest req) {
 	String path=req.getRequestURI();
-	return path.startsWith("/auth/");
+	return path.startsWith("/auth/")|| path.startsWith("/api/user");
 }
 
 }

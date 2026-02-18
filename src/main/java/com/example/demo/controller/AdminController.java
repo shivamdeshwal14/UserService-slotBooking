@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.dto.OnboardingRequest;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.model.User;
@@ -17,12 +16,12 @@ import java.util.List;
 public class AdminController {
 	 private final UserService userService;
 	 private final JWTUtil jwt;
+
 	 
-	
 	    public AdminController(UserService userService, JWTUtil jwt){
 	        this.userService = userService;
 			this.jwt = jwt;
-	       
+			
 	    }	   
 	    @PostMapping("/onboard")
 	    public UserResponse OnboardEmp(@RequestBody OnboardingRequest onb,HttpServletRequest request) {
@@ -44,7 +43,7 @@ public class AdminController {
 	    	        User user = userService.onboard(onb, orgId);
 	    	        return new UserResponse(user);
 	    	    } catch (Exception e) {
-	    	        e.printStackTrace();  // See the exact exception
+	    	        e.printStackTrace();  
 	    	        throw e;
 	    	    }
 	   

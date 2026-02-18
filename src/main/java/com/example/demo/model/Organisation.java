@@ -2,6 +2,8 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="organization")
 public class Organisation {
@@ -14,6 +16,7 @@ public class Organisation {
     private String location;
 
     @OneToMany(mappedBy="organization")
+    @JsonManagedReference
     private List<User> users;  // doctors/admins
 
     // Constructors

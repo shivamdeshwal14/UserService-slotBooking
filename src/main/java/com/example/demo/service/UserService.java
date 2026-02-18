@@ -1,5 +1,4 @@
 package com.example.demo.service;
-
 import com.example.demo.dto.OnboardingRequest;
 import com.example.demo.exception.AccountDisabledException;
 import com.example.demo.exception.InvalidCredentialsException;
@@ -12,7 +11,6 @@ import com.example.demo.repository.OrganisationRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @Service
@@ -107,10 +105,17 @@ public class UserService {
     	user.setActive(!isActive);
     	return userRepository.save(user);
     }
+    
+    
+    
+    	public List<Organisation> getAllOrganizations() {
+            return orp.findAll();
+        }
+    }
 
 
 
 
   
     
-}
+
