@@ -17,8 +17,6 @@ public class UserController {
 	public UserController(UserService use){
 			this.use=use;	
 	}
-	
-	
 @GetMapping("/all/orgnizations")
 	public List<OrganisationResponse> getAllOrganizations(){
     	return use.getAllOrganizations()
