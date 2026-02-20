@@ -41,7 +41,6 @@ public JWTAuthFilter(JWTUtil jwt) {
 	String token=authHeader.substring(7);
 //	System.out.println(token);
 	try {
-		System.out.println("Starting try block");
 		Claims claims=jwt.validateToken(token);
 		String roleStr=claims.get("role",String.class);
 		System.out.println("role in token--- "+roleStr);
@@ -76,7 +75,7 @@ public JWTAuthFilter(JWTUtil jwt) {
 @Override
 protected boolean shouldNotFilter(HttpServletRequest req) {
 	String path=req.getRequestURI();
-	return path.startsWith("/auth/")|| path.startsWith("/api/user");
+	return path.startsWith("/api/auth/")|| path.startsWith("/api/user");
 }
 
 }
