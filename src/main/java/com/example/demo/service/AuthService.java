@@ -1,43 +1,52 @@
 package com.example.demo.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.OnboardingRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.exception.AccountDisabledException;
 import com.example.demo.exception.InvalidCredentialsException;
 import com.example.demo.exception.UserAlreadyExistsException;
 import com.example.demo.model.User;
 import com.example.demo.model.User.Role;
-import com.example.demo.repository.OrganisationRepository;
-import com.example.demo.repository.UserRepository;
 
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JWTUtil;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class AuthService {
-	 private final UserRepository userRepository;
+	
+	 	private final UserRepository userRepository;
 	    private final PasswordEncoder passwordEncoder;
-	    private final OrganisationRepository orp;
-	       public AuthService(UserRepository userRepository,PasswordEncoder paswordEncoder, OrganisationRepository orp){
-	        this.userRepository = userRepository;
-	        this.passwordEncoder=paswordEncoder;
-	        this.orp=orp;
-	       }
-	       
-	       
-//	       Login-Service
-	       public User login(String email,String password) {
-	       	
-	       	User user= userRepository.findByEmail(email.trim()).orElseThrow(InvalidCredentialsException::new);
-	       	
-//	       	if(!passwordEncoder.matches(password,user.getPassword())) throw new InvalidCredentialsException();
-	       	if(!user.isActive()) throw new AccountDisabledException();
+	    private final JWTUtil jwt;
+	 	      
 	    
-	           return user;
+	       public LoginResponse login(LoginRequest credentials) {
+	    	   
+		    	String email=credentials.getEmail();
+			    String password=credentials.getPassword();    
+			    
+		       	User user= userRepository.findByEmail(email.trim()).orElseThrow(InvalidCredentialsException::new);
+		       	
+	//	       	if(!passwordEncoder.matches(password,user.getPassword())) throw new InvalidCredentialsException();
+		       	if(!user.isActive()) throw new AccountDisabledException();
+		       	
+	//	       	user logged in successfully now generate token
+		        String token=jwt.generateToken( user.getId(), user.getRole(),user.getOrganization() != null ? user.getOrganization().getId():null);
+		    
+		        return new LoginResponse(token,new UserResponse(user));
+	     
 	       }
 	       
-//	       signup-Service
 	       
-	       public User signUp(OnboardingRequest onb) {
+	       public UserResponse signUp(OnboardingRequest onb) {
 	       	userRepository.findByEmail(onb.getEmail()).ifPresent(u->{
 	       		throw new UserAlreadyExistsException("user already exists with this email,please login!");
 	       	});
@@ -50,7 +59,8 @@ public class AuthService {
 	            user.setActive(true);
 	            user.setRole(Role.USER);
 
-	            return userRepository.save(user);
+	            return new UserResponse(userRepository.save(user));
+	         
 	       }
 	       
 	       

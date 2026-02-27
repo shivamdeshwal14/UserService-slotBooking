@@ -10,13 +10,14 @@ import com.example.demo.dto.OrganisationResponse;
 
 import com.example.demo.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 	private final UserService use;
-	public UserController(UserService use){
-			this.use=use;	
-	}
+	
 @GetMapping("/all/orgnizations")
 	public List<OrganisationResponse> getAllOrganizations(){
     	return use.getAllOrganizations()

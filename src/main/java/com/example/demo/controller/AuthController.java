@@ -4,44 +4,31 @@ import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.OnboardingRequest;
 import com.example.demo.dto.UserResponse;
-import com.example.demo.model.User;
-import com.example.demo.security.JWTUtil;
+
 import com.example.demo.service.AuthService;
-import com.example.demo.service.UserService;
+
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	 private final UserService userService;
-	 
-	    private JWTUtil jwt;
+	  
+	
 	    private final AuthService authService;
 
-	    public AuthController(UserService userService,JWTUtil jwt,AuthService authService){
-	        this.userService = userService;
-	        this.jwt=jwt;
-	        this.authService=authService;
-	    }	
-	    
 	    
 	    @PostMapping("/login")
 	    public LoginResponse login(@RequestBody LoginRequest credentials){	           	
-	        String email=credentials.getEmail();
-	        String password=credentials.getPassword();
-	        User user=authService.login(email, password);	      
-	        String token=jwt.generateToken( user.getId(), 
-	        	    user.getRole(), 
-	        	    user.getOrganization() != null ? user.getOrganization().getId() : null);	      
-	        return new LoginResponse(token,new UserResponse(user));
-	    }
-	    
+	        return authService.login(credentials);	  
+	    }	   
 	    
 	    @PostMapping("/signup")
 	    public UserResponse login(@RequestBody OnboardingRequest onb){	           	
-	        User user=authService.signUp(onb);	     	      
-	        return new UserResponse(user);
+	        return authService.signUp(onb);	     	      
+	       
 	    }
 	   
 }
