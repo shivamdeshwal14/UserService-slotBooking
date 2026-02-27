@@ -53,7 +53,7 @@ public class AdminService {
 	     
 	         user.setRole(onb.getRole()==null ?User.Role.DOCTOR :onb.getRole());
 	         user.setActive(true);
-	         user.setOrganization(org);
+	         user.setOrganisation(org);
 	         
 	         return new UserResponse(userRepository.save(user));
 	    }
@@ -69,7 +69,7 @@ public class AdminService {
     		Claims claims=jwt.validateToken(token);
     		Number orgIdNum = (Number) claims.get("orgId");
 	        Long orgId = orgIdNum.longValue();
-	    	User user=userRepository.findByIdAndOrganization_Id(id,orgId).orElseThrow(()->new RuntimeException("User not found with this id"));    			    	
+	    	User user=userRepository.findByIdAndOrganisation_Id(id,orgId).orElseThrow(()->new RuntimeException("User not found with this id"));    			    	
 	    	boolean isActive=user.isActive();
 	    	user.setActive(!isActive);
 	    	User updatedUser=userRepository.save(user);
@@ -85,7 +85,7 @@ public class AdminService {
     		Number orgIdNum = (Number) claims.get("orgId");
 	        Long orgId = orgIdNum.longValue();
 	        
-	    	List<User> userdata=userRepository.findAllByOrganization_Id(orgId);
+	    	List<User> userdata=userRepository.findAllByOrganisation_Id(orgId);
 	    	return userdata.
 	    			stream().
 	    			map(UserResponse::new).toList();

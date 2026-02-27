@@ -1,16 +1,25 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Getter
+@Setter
+
+@RequiredArgsConstructor
 @Entity
+
 @Table(
     name = "users",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email", "organization_id"})
+        @UniqueConstraint(columnNames = {"email", "organisation_id"})
     }
 )
 public class User {
@@ -31,50 +40,26 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role; // ADMIN, DOCTOR, USER
+    private Role role;
 
     private boolean active = true;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name="organization_id")
+    @JoinColumn(name="organisation_id")
     @JsonBackReference
-    private Organisation organization; 
+    private Organisation organisation; 
 
     public enum Role { ADMIN, DOCTOR, USER }
 
-    // ---------------- Getters ----------------
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getPhone() { return phone; }
-    public String getPassword() { return password; }
-    public Role getRole() { return role; }
-    public boolean isActive() { return active; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public Organisation getOrganization() { return organization; }
-
-    // ---------------- Setters ----------------
-    public void setId(Long id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setPassword(String password) { this.password = password; }
-    public void setRole(Role role) { this.role = role; }
-    public void setActive(boolean active) { this.active = active; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public void setOrganization(Organisation organization) { this.organization = organization; }
-
-    // ---------------- Constructors ----------------
-    public User() {} // No-args constructor
-
-    public User(String name, String email, String phone, String password, Role role, Organisation organization) {
+   
+    public User(String name, String email, String phone, String password, Role role, Organisation organisation) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.password = password;
         this.role = role;
-        this.organization = organization;
+        this.organisation = organisation;
     }
 }

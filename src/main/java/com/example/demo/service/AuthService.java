@@ -39,7 +39,7 @@ public class AuthService {
 		       	if(!user.isActive()) throw new AccountDisabledException();
 		       	
 	//	       	user logged in successfully now generate token
-		        String token=jwt.generateToken( user.getId(), user.getRole(),user.getOrganization() != null ? user.getOrganization().getId():null);
+		        String token=jwt.generateToken( user.getId(), user.getRole(),user.getOrganisation() != null ? user.getOrganisation().getId():null);
 		    
 		        return new LoginResponse(token,new UserResponse(user));
 	     

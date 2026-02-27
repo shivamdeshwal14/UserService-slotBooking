@@ -1,36 +1,38 @@
 package com.example.demo.model;
 import jakarta.persistence.*;
-import lombok.Data;
+
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+@RequiredArgsConstructor
 @Getter
 @Setter
-@Data
 @Entity
-@Table(name="organization")
+@Table(name="organisation",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"registrationnumber"})
+    })
+
 public class Organisation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String location;
-
-    @OneToMany(mappedBy="organization")
+    @Column(nullable=false)
+    private String registrationnumber;
+    
+    @OneToMany(mappedBy="organisation")
     @JsonManagedReference
-    private List<User> users;  // doctors/admins
+    private List<User> users; 
 
-    // Constructors
-    public Organisation() {}
-
-    public Organisation(String name, String location) {
-        this.name = name;
-        this.location = location;
-    }
+ 
+  
 
 }
