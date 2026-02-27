@@ -13,7 +13,7 @@ import java.util.List;
 public class AdminController {
 	
 	
-		 private final AdminService adminService;
+		private final AdminService adminService;
 	 
 	 
 	    @PostMapping("/onboard")
@@ -21,11 +21,13 @@ public class AdminController {
 	    	 return adminService.onboard(onb, request);
 	    	 
 	    }
+	    
 	       	    
 	    @GetMapping("/org/showEmps/")
 	    public List<UserResponse> getAllUsers(HttpServletRequest request){
     	        return adminService.getAllEmp(request);  		
 	    }
+	    
 	   	    
 	    @PatchMapping("/changeActiveStatus/user/{id}")
 	    public UserResponse deactivateUser(@PathVariable long id,HttpServletRequest request) {
